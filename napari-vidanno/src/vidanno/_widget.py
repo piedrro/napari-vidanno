@@ -28,9 +28,9 @@ class VidAnnoWidget(QWidget):
 
     def _on_click(self):
         try:
-            #video = skvideo.io.vread("pandas.mp4")
-            # print(video.shape)
-            print("testing")
+            video = skvideo.io.vread("pandas.mp4")
+            print(video.shape)
+            print("testingxxxhhhxx")
         except:
             print(traceback.format_exc())
   
