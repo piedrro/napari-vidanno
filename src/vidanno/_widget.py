@@ -35,6 +35,8 @@ from magicgui import magic_factory
 from magicgui.widgets import CheckBox, Container, create_widget
 from qtpy.QtWidgets import QHBoxLayout, QPushButton, QWidget
 from skimage.util import img_as_float
+import skvideo
+import traceback
 
 if TYPE_CHECKING:
     import napari
@@ -112,7 +114,7 @@ class ImageThreshold(Container):
             self._viewer.add_labels(thresholded, name=name)
 
 
-class ExampleQWidget(QWidget):
+class VidAnnoWidget(QWidget):
     # your QWidget.__init__ can optionally request the napari viewer instance
     # use a type annotation of 'napari.viewer.Viewer' for any parameter
     def __init__(self, viewer: "napari.viewer.Viewer"):
@@ -126,4 +128,9 @@ class ExampleQWidget(QWidget):
         self.layout().addWidget(btn)
 
     def _on_click(self):
-        print("napari has", len(self.viewer.layers), "layers")
+        try:
+            import skvideo.io
+            video = skvideo.io.vread("pandas.mp4")
+            # print(video.shape)
+        except:
+            print(traceback.format_exc())

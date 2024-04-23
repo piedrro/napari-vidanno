@@ -1,10 +1,7 @@
 import numpy as np
 
 from vidanno._widget import (
-    ExampleQWidget,
-    ImageThreshold,
-    threshold_autogenerate_widget,
-    threshold_magic_widget,
+    VidAnnoWidget,
 )
 
 
