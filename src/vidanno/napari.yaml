@@ -1,0 +1,30 @@
+name: napari-vidanno
+display_name: VidANNO
+# use 'hidden' to remove plugin from napari hub search results
+visibility: public
+# see https://napari.org/stable/plugins/manifest.html for valid categories
+categories: ["Annotation", "Segmentation", "Acquisition"]
+contributions:
+  commands:
+    - id: napari-vidanno.make_container_widget
+      python_name: vidanno:ImageThreshold
+      title: Make threshold Container widget
+    - id: napari-vidanno.make_magic_widget
+      python_name: vidanno:threshold_magic_widget
+      title: Make threshold magic widget
+    - id: napari-vidanno.make_function_widget
+      python_name: vidanno:threshold_autogenerate_widget
+      title: Make threshold function widget
+    - id: napari-vidanno.make_qwidget
+      python_name: vidanno:ExampleQWidget
+      title: Make example QWidget
+  widgets:
+    - command: napari-vidanno.make_container_widget
+      display_name: Container Threshold
+    - command: napari-vidanno.make_magic_widget
+      display_name: Magic Threshold
+    - command: napari-vidanno.make_function_widget
+      autogenerate: true
+      display_name: Autogenerate Threshold
+    - command: napari-vidanno.make_qwidget
+      display_name: Example QWidget
