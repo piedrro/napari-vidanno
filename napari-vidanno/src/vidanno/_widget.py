@@ -9,7 +9,6 @@ import skvideo.io
 import traceback
 import os
 
-
 if TYPE_CHECKING:
     import napari
 
@@ -31,7 +30,7 @@ class VidAnnoWidget(QWidget):
         try:
             #video = skvideo.io.vread("pandas.mp4")
             # print(video.shape)
-            print(True)
+            print("testing")
         except:
             print(traceback.format_exc())
   
