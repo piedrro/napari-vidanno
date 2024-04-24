@@ -13,6 +13,7 @@ import os
 import cv2
 import numpy as np
 from functools import partial
+import matplotlib.colors as mcolors
 
 if TYPE_CHECKING:
     import napari
@@ -55,18 +56,32 @@ class VidAnnoWidget(QWidget, gui):
 
         try:
 
+            layer_names = [layer.name for layer in self.viewer.layers]
+
+            if "Shapes" not in layer_names:
+                self.viewer.add_shapes(ndim=3, features={"label_name":[]})
+
+            shapes_layer = self.viewer.layers["Shapes"]
             label_name = self.gui.add_label_name.currentText()
 
             if label_name in self.label_dict.keys():
 
-                label_type = self.label_dict["label_name"]["label_type"]
-                label_colour = self.label_dict["label_name"]["label_colour"]
+                label_type = self.label_dict[label_name]["label_type"]
+                label_colour = self.label_dict[label_name]["label_colour"]
 
-                print(label_colour)
+                if label_type.lower() == "box":
+                    shapes_layer.mode = 'add_rectangle'
+                if label_type.lower() == "line":
+                    shapes_layer.mode = "add_line"
+                if label_type.lower() == "polygon":
+                    shapes_layer.mode = "add_polygon_lasso"
 
-
+                shapes_layer.current_edge_color = list(mcolors.to_rgb(label_colour.lower()))
+                shapes_layer.current_edge_width = 5
+                shapes_layer.current_properties = {"label_name":[label_name]}
+                
         except:
-            print(traceback.format_exc)
+            print(traceback.format_exc())
 
 
     def update_label_dict(self):
@@ -74,8 +89,8 @@ class VidAnnoWidget(QWidget, gui):
         try:
 
             label_name = self.gui.create_label_name.text()
-            label_type = self.gui.create_label_type.currentIndex()
-            label_colour = self.gui.create_label_colour.currentIndex()
+            label_type = self.gui.create_label_type.currentText()
+            label_colour = self.gui.create_label_colour.currentText()
 
             self.label_dict[label_name] = {"label_type":label_type,
                                            "label_colour":label_colour,
@@ -242,7 +257,7 @@ class VidAnnoWidget(QWidget, gui):
             video = np.stack(frames, axis=0) # dimensions (T, H, W, C)
 
             self.image_layer = self.viewer.add_image(video)
-            self.shapes_layer = self.viewer.add_shapes(ndim=3)
+            self.shapes_layer = self.viewer.add_shapes(ndim=3, properties={"label_name":[]})
 
             self.shapes_layer.events.data.connect(self.update_shapes)
 
@@ -252,4 +267,41 @@ class VidAnnoWidget(QWidget, gui):
 
     def update_shapes(self, event):
 
-        pass
+        try:
+
+            shapes_layer = self.viewer.layers["Shapes"]
+            shapes = shapes_layer.data
+
+            print(shapes_layer.properties)
+
+            if event.action == "adding":
+                pass
+            if event.action == "added":
+                shape_index = len(shapes)
+
+                label_name = self.gui.add_label_name.currentText()
+
+                if label_name in self.label_dict.keys():
+
+                    # print(True)
+
+                    label_colour = self.label_dict[label_name]["label_colour"]
+                    # edge_colour = list(mcolors.to_rgb(label_colour.lower()))
+                    # edge_colour.append(1)
+                    
+                    # shapes_layer.edge_color[-1] = edge_colour
+
+                    # shapes_layer.refresh()
+
+                    # print(shapes_layer.edge_color)
+
+                    # print(shapes_layer.text)
+
+
+
+            if event.action == "changing":
+                pass
+            if event.action =="changed":
+                pass
+        except:
+            print(traceback.format_exc())
