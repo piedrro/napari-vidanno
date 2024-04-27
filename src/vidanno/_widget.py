@@ -45,7 +45,24 @@ class VidAnnoWidget(QWidget, gui):
 
         self.label_dict = {}    
 
+        self.viewer.layers.events.inserted.connect(self.on_add_layer)
+
         self.load_sample_data()
+
+
+    def on_add_layer(self, event):
+
+        if event.value.name == "Shapes":
+
+            self.shapes_layer = self.viewer.layers["Shapes"]
+
+            properties = properties={"label_name":[]}
+            shape_text = {'text': 'label_name', 'size': 20, 'color': 'black', 'anchor': 'upper_left'}
+
+            self.shapes_layer.properties = properties
+            self.shapes_layer.text = shape_text
+
+            self.shapes_layer.events.data.connect(self.update_shapes)
 
 
     def add_new_label(self, label_name = None):
@@ -226,7 +243,14 @@ class VidAnnoWidget(QWidget, gui):
             video = np.stack(frames, axis=0) # dimensions (T, H, W, C)
 
             self.image_layer = self.viewer.add_image(video)
-            self.shapes_layer = self.viewer.add_shapes(ndim=3, properties={"label_name":[]})
+
+            properties = properties={"label_name":[]}
+            shape_text = {'text': 'label_name', 'size': 20, 'color': 'black', 'anchor': 'upper_left'}
+
+            self.shapes_layer = self.viewer.add_shapes(ndim=3, 
+                                                       properties=properties, 
+                                                       text = shape_text,
+                                                       )
 
             self.shapes_layer.events.data.connect(self.update_shapes)
 
@@ -237,7 +261,6 @@ class VidAnnoWidget(QWidget, gui):
     def update_shapes(self, event):
 
         try:
-
             shapes_layer = self.viewer.layers["Shapes"]
             shapes = shapes_layer.data
 
