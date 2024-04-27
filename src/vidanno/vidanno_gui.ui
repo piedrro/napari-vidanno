@@ -95,6 +95,42 @@
        </item>
       </widget>
      </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>Keyboard Shortcut</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QComboBox" name="create_label_keybind">
+       <item>
+        <property name="text">
+         <string>F1</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>F2</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>F3</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>F4</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>F5</string>
+        </property>
+       </item>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>

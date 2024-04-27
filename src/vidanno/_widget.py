@@ -33,7 +33,7 @@ class VidAnnoWidget(QWidget, gui):
         self.gui.setupUi(self.pixseq_ui)
         self.layout().addWidget(self.pixseq_ui)
 
-        self.gui.create_label.clicked.connect(self.update_label_dict)
+        self.gui.create_label.clicked.connect(self.initialise_new_label)
         self.gui.add_label.clicked.connect(self.add_new_label)
 
         self.viewer.bind_key('c', func = self.copy_selected_shapes)
@@ -43,16 +43,12 @@ class VidAnnoWidget(QWidget, gui):
         self.viewer.bind_key("Control-Up", lambda event: self.move_selected_shapes(viewer=self.viewer, key="up"))
         self.viewer.bind_key("Control-Down",  lambda event: self.move_selected_shapes(viewer=self.viewer, key="down"))
 
-
-        # self.viewer.bind_key('c', func=lambda event: self._copy_shapes(viewer=self.viewer, mode="active"), overwrite=True)
-        # self.viewer.bind_key('Control-c', func=lambda event: self._copy_shapes(viewer=self.viewer, mode="all"), overwrite=True)
-
         self.label_dict = {}    
 
         self.load_sample_data()
 
 
-    def add_new_label(self):
+    def add_new_label(self, label_name = None):
 
         try:
 
@@ -62,7 +58,9 @@ class VidAnnoWidget(QWidget, gui):
                 self.viewer.add_shapes(ndim=3, features={"label_name":[]})
 
             shapes_layer = self.viewer.layers["Shapes"]
-            label_name = self.gui.add_label_name.currentText()
+
+            if label_name not in self.label_dict.keys():
+                label_name = self.gui.add_label_name.currentText()
 
             if label_name in self.label_dict.keys():
 
@@ -85,16 +83,18 @@ class VidAnnoWidget(QWidget, gui):
             print(traceback.format_exc())
 
 
-    def update_label_dict(self):
+    def initialise_new_label(self):
 
         try:
 
             label_name = self.gui.create_label_name.text()
             label_type = self.gui.create_label_type.currentText()
             label_colour = self.gui.create_label_colour.currentText()
+            label_keybind = self.gui.create_label_keybind.currentText()
 
             self.label_dict[label_name] = {"label_type":label_type,
                                            "label_colour":label_colour,
+                                           "label_keybind":label_keybind,
                                            }
             
             label_names = self.label_dict.keys()
@@ -102,6 +102,10 @@ class VidAnnoWidget(QWidget, gui):
             combo = self.gui.add_label_name
             combo.clear()
             combo.addItems(label_names)
+
+            self.viewer.bind_key(label_keybind,  
+                                 lambda event: self.add_new_label(label_name=label_name), 
+                                 overwrite=True)
 
         except:
             print(traceback.format_exc())
@@ -271,8 +275,6 @@ class VidAnnoWidget(QWidget, gui):
 
             shapes_layer = self.viewer.layers["Shapes"]
             shapes = shapes_layer.data
-
-            print(shapes_layer.properties)
 
             if event.action == "adding":
                 pass
