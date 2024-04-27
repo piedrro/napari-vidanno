@@ -77,7 +77,8 @@ class VidAnnoWidget(QWidget, gui):
                     shapes_layer.mode = "add_polygon_lasso"
 
                 shapes_layer.current_edge_color = list(mcolors.to_rgb(label_colour.lower()))
-                shapes_layer.current_edge_width = 5
+                shapes_layer.current_face_color = [0,0,0,0]
+                shapes_layer.current_edge_width = 2
                 shapes_layer.current_properties = {"label_name":[label_name]}
                 
         except:
@@ -239,7 +240,6 @@ class VidAnnoWidget(QWidget, gui):
 
 
 
-    
     def load_sample_data(self):
         try:
             path = "pandas.mp4"
@@ -277,28 +277,7 @@ class VidAnnoWidget(QWidget, gui):
             if event.action == "adding":
                 pass
             if event.action == "added":
-                shape_index = len(shapes)
-
-                label_name = self.gui.add_label_name.currentText()
-
-                if label_name in self.label_dict.keys():
-
-                    # print(True)
-
-                    label_colour = self.label_dict[label_name]["label_colour"]
-                    # edge_colour = list(mcolors.to_rgb(label_colour.lower()))
-                    # edge_colour.append(1)
-                    
-                    # shapes_layer.edge_color[-1] = edge_colour
-
-                    # shapes_layer.refresh()
-
-                    # print(shapes_layer.edge_color)
-
-                    # print(shapes_layer.text)
-
-
-
+                pass
             if event.action == "changing":
                 pass
             if event.action =="changed":
