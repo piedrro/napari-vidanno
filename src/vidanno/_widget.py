@@ -202,48 +202,6 @@ class VidAnnoWidget(QWidget, gui):
             print(traceback.format_exc())
 
 
-
-    def _copy_shapes(self, viewer = None, mode ="active"):
-
-        try:
-
-            layer_names = [layer.name for layer in self.viewer.layers]
-
-            n_frames = int(self.viewer.dims.range[0][1])
-            current_frame = self.viewer.dims.current_step[0]
-
-            if mode == "active":
-                frame_list = [current_frame + 1]
-            else:
-                frame_list = np.arange(n_frames).tolist()
-                frame_list.pop(current_frame)
- 
-            if "Shapes" in layer_names:
-
-                shape_layer = self.viewer.layers["Shapes"]
-
-                shapes = shape_layer.data.copy()
-
-                shape_indeces = [index for index, shape in enumerate(shapes) if shape[0][0] == current_frame]
-
-                if len(shape_indeces) > 0:
-
-                    for frame in frame_list:
-
-                        for shape_index in shape_indeces:
-
-                            active_shape = shapes[shape_index].copy()
-                            active_shape[:, 0] = frame
-
-                            shapes.append(active_shape)
-
-                    shape_layer.data = shapes
-                    print(shapes)
-        except:
-            print(traceback.format_exc())
-
-
-
     def load_sample_data(self):
         try:
             path = "pandas.mp4"
