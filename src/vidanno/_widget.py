@@ -172,7 +172,9 @@ class VidAnnoWidget(QWidget, gui):
 
                 shape_layer = self.viewer.layers["Shapes"]
 
-                shapes = shape_layer.data
+                shapes = shape_layer.data.copy()
+                shape_colours = shape_layer.edge_color.copy()
+                shape_properties = shape_layer.properties.copy()
 
                 selected_shape_indices = list(shape_layer.selected_data)
 
@@ -185,10 +187,17 @@ class VidAnnoWidget(QWidget, gui):
                         selected_shape = shapes[shape_index].copy()
                         selected_shape[:, 0] = next_frame
 
+                        for key, value in shape_properties.items():
+                            shape_properties[key] = np.append(value, value[shape_index])
+
+                        shape_colours = np.vstack([shape_colours, shape_colours[shape_index]])
+
                         shapes.append(selected_shape)
                         new_selection_indices.append(len(shapes)-1)
 
                     shape_layer.data = shapes
+                    shape_layer.properties = shape_properties
+                    shape_layer.edge_color = shape_colours
 
                     current_step[0] = next_frame
                     self.viewer.dims.current_step = current_step
@@ -196,8 +205,6 @@ class VidAnnoWidget(QWidget, gui):
                     shape_layer.refresh()
                     shape_layer.selected_data = set(new_selection_indices)
                     
-
-
         except:
             print(traceback.format_exc())
 
